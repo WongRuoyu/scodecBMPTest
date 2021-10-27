@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="sbt: net.liftmodules:lift-jquery-module_3.0_2.12:2.10:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/repo.huaweicloud.com/repository/maven/net/liftmodules/lift-jquery-module_3.0_2.12/2.10/lift-jquery-module_3.0_2.12-2.10.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/repo.huaweicloud.com/repository/maven/net/liftmodules/lift-jquery-module_3.0_2.12/2.10/lift-jquery-module_3.0_2.12-2.10-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/repo.huaweicloud.com/repository/maven/net/liftmodules/lift-jquery-module_3.0_2.12/2.10/lift-jquery-module_3.0_2.12-2.10-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

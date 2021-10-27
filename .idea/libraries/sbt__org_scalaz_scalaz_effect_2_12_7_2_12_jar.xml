@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="sbt: org.scalaz:scalaz-effect_2.12:7.2.12:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/repo.huaweicloud.com/repository/maven/org/scalaz/scalaz-effect_2.12/7.2.12/scalaz-effect_2.12-7.2.12.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/repo.huaweicloud.com/repository/maven/org/scalaz/scalaz-effect_2.12/7.2.12/scalaz-effect_2.12-7.2.12-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/repo.huaweicloud.com/repository/maven/org/scalaz/scalaz-effect_2.12/7.2.12/scalaz-effect_2.12-7.2.12-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
