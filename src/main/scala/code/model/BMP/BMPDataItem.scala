@@ -52,7 +52,7 @@ object RLECode {
 
   implicit val discriminator: Discriminator[CompressedItem, RLECode, Int] = Discriminator(0)
 
-  val componentCodec: Codec[Int :: Int :: HNil] = peek(uint8 :: uint8)
+  val componentCodec = peek(uint8 :: uint8)
   implicit val codec: Codec[RLECode] = new Codec[RLECode] {
     override def sizeBound: SizeBound = SizeBound.atLeast(16)
 
