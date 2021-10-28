@@ -66,7 +66,7 @@ object RLECode {
 
     override def decode(bits: BitVector): Attempt[DecodeResult[RLECode]] = componentCodec.decode(bits)
       .flatMap { res =>
-        res.value.toList match {
+        res.value match {
           case List(0, 0) => EOL.codec.decode(res.remainder)
           case List(0, 1) => EOF.codec.decode(res.remainder)
           case List(0, 2) => Skipped.codec.decode(res.remainder)

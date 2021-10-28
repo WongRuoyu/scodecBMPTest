@@ -68,9 +68,9 @@ object BMPFile {
           // 16-bit data is always MASKed.
         case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._16TrueColor => list(RGBCode16.codec).decode(remainder)
         // 24-bit data is always stored as (R,G,B)
-        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._24TrueColor => list(TwentiesBitsColoredItem.codec).decode(remainder)
-        case DecodeResult(Headers(_, infoHeader, colorPalette, bitFieldMask), remainder) if infoHeader.biBitCount == BitCount._32TrueColor && infoHeader.biCompression == Compression.NoCompression => list(ThirtiesBitsColoredItem.codec).decode(remainder)
-        case DecodeResult(Headers(_, infoHeader, colorPalette, bitFieldMask), remainder) if infoHeader.biBitCount == BitCount._32TrueColor && infoHeader.biCompression == Compression.MASK => list(RGBCode32.codec).decode(remainder)
+        case DecodeResult(Headers(_, infoHeader,_,_), remainder) if infoHeader.biBitCount == BitCount._24TrueColor => list(TwentiesBitsColoredItem.codec).decode(remainder)
+        case DecodeResult(Headers(_, infoHeader,_,_), remainder) if infoHeader.biBitCount == BitCount._32TrueColor && infoHeader.biCompression == Compression.NoCompression => list(ThirtiesBitsColoredItem.codec).decode(remainder)
+        case DecodeResult(Headers(_, infoHeader,_,_), remainder) if infoHeader.biBitCount == BitCount._32TrueColor && infoHeader.biCompression == Compression.MASK => list(RGBCode32.codec).decode(remainder)
       }.require.require.value
 
       val file = BMPFile(headers.header,headers.infoHeader,headers.colorPalette,headers.bitFieldMask,res)
