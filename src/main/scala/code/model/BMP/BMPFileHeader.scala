@@ -10,7 +10,9 @@ case class BMPFileHeader(bfType: String,
                          bfSize: Long,
                          bfReserved1: Int = 0,
                          bfReserved2: Int = 0,
-                         bfOffBits: Long)
+                         bfOffBits: Long) {
+  override val toString: String = s"BMPFileHeader(bfType:%s,bfSize:%d Bytes,bfOffBits:%d Bytes)".format(this.bfType,this.bfSize,this.bfOffBits)
+}
 
 object BMPFileHeader {
 

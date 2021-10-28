@@ -18,6 +18,9 @@ case class BMPInfoHeader(biSize: Long,
                          biClrUsed: Long,
                          biClrImportant: Long) {
 
+  override val toString: String = s"BMPInfoHeader(biSize:%d,%nbiWidth:%d %nbiHeight:%d,%nbiBitCount:%s,%nbiCompression:%s,%nbiSizeImage:%d)".
+    format(this.biSize,this.biWidth,this.biHeight,this.biBitCount.toString,this.biCompression.toString,this.biSizeImage)
+
   def hasColorTable: Boolean = this.biBitCount.id == 1 || this.biBitCount.id == 4 || this.biBitCount.id == 8
 
   def hasMask: Boolean = this.biCompression ==  Compression.MASK

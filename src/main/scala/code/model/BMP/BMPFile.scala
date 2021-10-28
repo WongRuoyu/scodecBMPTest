@@ -60,36 +60,21 @@ object BMPFile {
       val headers: Headers = headingCodec.decode(bits).require.value
 
       val res: List[BMPDataItem] = headingCodec.decode(bits).map {
-        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._1Color => {println(infoHeader);list(MonoItem.codec).decode(remainder)}
-        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._16Color && infoHeader.biCompression == Compression.NoCompression => list(SixteenBitsItem.codec).decode(remainder)
+        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._1Color && infoHeader.biCompression == Compression.NoCompression => {println(infoHeader);list(MonoItem.codec).decode(remainder)}
+        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._16Color && infoHeader.biCompression == Compression.NoCompression => list(RGBCode16.codec).decode(remainder)
         case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._16Color && infoHeader.biCompression == Compression.RLE8 => list(RLECode.codec).decode(remainder)
         case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._256Color && infoHeader.biCompression == Compression.NoCompression => list(EightBitsItem.codec).decode(remainder)
-        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._256Color && infoHeader.biCompression == Compression.RLE4 => list(EightBitsItem.codec).decode(remainder)
-        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._16TrueColor => list(SixteenBitsItem.codec).decode(remainder)
-        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._24TrueColor => list(TwentyBitsItem.codec).decode(remainder)
-        case DecodeResult(Headers(_, infoHeader, colorPalette, bitFieldMask), remainder) if infoHeader.biBitCount == BitCount._32TrueColor => {println(infoHeader);println(colorPalette);println(bitFieldMask);list(ThirtyBitsItem.codec).decode(remainder)}
+        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._256Color && infoHeader.biCompression == Compression.RLE4 => list(RLECode.codec).decode(remainder)
+          // 16-bit data is always MASKed.
+        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._16TrueColor => list(RGBCode16.codec).decode(remainder)
+        // 24-bit data is always stored as (R,G,B)
+        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._24TrueColor => list(TwentiesBitsColoredItem.codec).decode(remainder)
+        case DecodeResult(Headers(_, infoHeader, colorPalette, bitFieldMask), remainder) if infoHeader.biBitCount == BitCount._32TrueColor && infoHeader.biCompression == Compression.NoCompression => {println(infoHeader);println(colorPalette);println(bitFieldMask);list(ThirtiesBitsColoredItem.codec).decode(remainder)}
+        case DecodeResult(Headers(_, infoHeader, colorPalette, bitFieldMask), remainder) if infoHeader.biBitCount == BitCount._32TrueColor && infoHeader.biCompression == Compression.MASK => {println(infoHeader);println(colorPalette);println(bitFieldMask);list(RGBCode32.codec).decode(remainder)}
       }.require.require.value
-
-
-/*      val re: List[BitVector] = for {
-        (headers,remainder) <- headingCodec.decode(bits)
-      } yield headers*/
 
       val file = BMPFile(headers.header,headers.infoHeader,headers.colorPalette,headers.bitFieldMask,res)
       Attempt.successful(DecodeResult(file,BitVector.empty))
-      //      val res = headingCodec.decode(bits)
-
-      /*      val fileCodec: Codec[BMPFile] = headingCodec.flatZip {
-              case (((_, infoHeader), _), _) if infoHeader.biBitCount == BitCount._1Color => list(MonoItem.codec)
-              case (((_, infoHeader), _), _) if infoHeader.biBitCount == BitCount._16Color && infoHeader.biCompression == Compression.NoCompression => list(SixteenBitsItem.codec).as[List[BMPDataItem]]
-              case (((_, infoHeader), _), _) if infoHeader.biBitCount == BitCount._16Color && infoHeader.biCompression == Compression.RLE8 => list(RLECode.codec)
-              case (((_, infoHeader), _), _) if infoHeader.biBitCount == BitCount._256Color && infoHeader.biCompression == Compression.NoCompression => list(EightBitsItem.codec)
-              case (((_, infoHeader), _), _) if infoHeader.biBitCount == BitCount._256Color && infoHeader.biCompression == Compression.RLE4 => list(EightBitsItem.codec)
-              case (((_, infoHeader), _), _) if infoHeader.biBitCount == BitCount._16TrueColor => list(SixteenBitsItem.codec)
-              case (((_, infoHeader), _), _) if infoHeader.biBitCount == BitCount._24TrueColor => list(TwentyBitsItem.codec)
-              case (((_, infoHeader), _), _) if infoHeader.biBitCount == BitCount._32TrueColor => list(ThirtyBitsItem.codec)
-            }.flattenLeftPairs.as[BMPFile]
-            fileCodec.decode(bits)*/
-    }
+   }
   }
 }

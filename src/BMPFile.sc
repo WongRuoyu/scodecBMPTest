@@ -1,4 +1,4 @@
-import code.model.BMP.{BMPFile, BitCount, ColorPalette}
+import code.model.BMP.{BMPDataItem, BMPFile, BitCount, ColorPalette, TwentiesBitsColoredItem}
 import scodec.bits.{BitVector, HexStringSyntax}
 
 import java.io.{File, FileInputStream}
@@ -14,14 +14,13 @@ println(colorTable.toString)
 val tt = hex"1234"
 
 //val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/assets/LAND2.BMP")
-val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/assets/LAND3.BMP")
+//val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/assets/LAND3.BMP")
 //val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/assets/BLK.BMP")
 //val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/assets/BLU.BMP")
 //val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/assets/GRN.BMP")
+val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/assets/RED.BMP")
 //val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/assets/land.bmp")
-//val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/flag_b24.bmp")
-//val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/test3.bmp")
-//val file = new File("D:\\itellJworks\\ScodecTest\\src\\test1.bmp")
+//val file = new File("/run/media/ruoyu/Doc/itellJworks/scodecBMPTest/src/assets/flag_b24.bmp")
 println(s"the length of the file is:%d".format(file.length()))
 val in = new FileInputStream(file)
 val bytes = new Array[Byte](file.length().toInt)
@@ -46,7 +45,9 @@ val colorPalette = decoded.value.colorPalette
 val bitFieldMask = decoded.value.bitFieldMask
 bitFieldMask.foreach(println _)
 
-val data = decoded.value.data
+val data:List[BMPDataItem] = decoded.value.data
+val p1=data(1)
+//print(p1.)
 println(s"the length of data is:%d".format(data.length))
 data.grouped(infoHeader.biWidth.toInt).map(_.mkString("-")).foreach(println _)
 //data.foreach(println _)

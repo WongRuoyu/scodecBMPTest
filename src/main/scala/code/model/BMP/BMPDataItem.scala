@@ -13,17 +13,15 @@ object CompressedItem {
 
   implicit val codec: Codec[CompressedItem] = discriminated[CompressedItem]
     .by(uint16)
-    .typecase(0, RGBCode.codec)
-    .typecase(1, RLECode.codec)
-    .typecase(2, SixteenBitsItem.codec)
-    .typecase(3, ThirtyBitsItem.codec)
+    .typecase(0, RLECode.codec)
+    .typecase(1, RGBCode.codec)
 }
 
 sealed trait RGBCode extends CompressedItem
 
 object RGBCode {
 
-  implicit val discriminator: Discriminator[CompressedItem, RGBCode, Int] = Discriminator(0)
+  implicit val discriminator: Discriminator[CompressedItem, RGBCode, Int] = Discriminator(1)
 
   implicit val codec: Codec[RGBCode] = discriminated[RGBCode]
     .by(uint16)
@@ -51,7 +49,7 @@ sealed trait RLECode extends CompressedItem
 
 object RLECode {
 
-  implicit val discriminator: Discriminator[CompressedItem, RLECode, Int] = Discriminator(1)
+  implicit val discriminator: Discriminator[CompressedItem, RLECode, Int] = Discriminator(0)
 
   val componentCodec = peek(uint8 :: uint8)
   implicit val codec: Codec[RLECode] = new Codec[RLECode] {
@@ -178,77 +176,108 @@ object EOF {
   implicit val codec: Codec[EOF] = bits(16).as[EOF]
 }
 
-final case class SixteenBitsItem(bits: BitVector) extends CompressedItem
+/*final case class SixteenBitsItem(bits: BitVector) extends CompressedItem
 
 object SixteenBitsItem {
   implicit val codec: Codec[SixteenBitsItem] = bits(16).as[SixteenBitsItem]
   //  implicit val discriminator: Discriminator[UnCompressedItem,EightBitsItem,Int] = Discriminator(16)
   implicit val discriminator: Discriminator[CompressedItem, SixteenBitsItem, Int] = Discriminator(2)
 
-//  implicit val transformer: Transformer[SixteenBitsItem,BMPDataItem] =
+  //  implicit val transformer: Transformer[SixteenBitsItem,BMPDataItem] =
+}*/
+
+
+// Unpressed------------------------------------------------------------------------------------
+sealed trait UnCompressedItem extends BMPDataItem
+
+object UnCompressedItem {
+  implicit val codec: Codec[UnCompressedItem] = discriminated[UnCompressedItem]
+    .by(uint8)
+    .typecase(0,ColorPalettedItem.codec)
+    .typecase(1,ColoredItem.codec)
 }
 
-//32-bits
-case class ThirtyBitsItem(bits: BitVector) extends CompressedItem
+sealed trait ColorPalettedItem extends UnCompressedItem
 
-object ThirtyBitsItem {
-  implicit val codec: Codec[ThirtyBitsItem] = bits(32).as[ThirtyBitsItem]
-  implicit val discriminator: Discriminator[CompressedItem, ThirtyBitsItem, Int] = Discriminator(32)
-  //  implicit val discriminator: Discriminator[UnCompressedItem,ThirtyBitsItem,Int] = Discriminator(32)
+object ColorPalettedItem {
+  implicit val discriminator: Discriminator[UnCompressedItem,ColorPalettedItem,Int] = Discriminator(0)
+  implicit val codec: Codec[ColorPalettedItem] = discriminated[ColorPalettedItem]
+    .by(uint8)
+    .typecase(1,MonoItem.codec)
+    .typecase(4,FourBitsItem.codec)
+    .typecase(8,EightBitsItem.codec)
 }
 
+sealed trait ColoredItem extends UnCompressedItem
 
-//8-bits item
-case class EightBitsItem(index: Int) extends UnCompressedItem
-
-object EightBitsItem {
-  implicit val codec: Codec[EightBitsItem] = uint8.as[EightBitsItem]
-
-  //  implicit val codec: Codec[EightBitsItem] = ("index" | uint8).as[EightBitsItem]
-  implicit val discriminator: Discriminator[UnCompressedItem, EightBitsItem, Int] = Discriminator(8)
+object ColoredItem {
+  implicit val discriminator: Discriminator[UnCompressedItem,ColoredItem,Int] = Discriminator(1)
+  implicit val codec: Codec[ColoredItem] = discriminated[ColoredItem]
+    .by(uint8)
+    .typecase(24,TwentiesBitsColoredItem.codec)
+    .typecase(32,ThirtiesBitsColoredItem.codec)
 }
 
+// subclasses for ColorPalettedItem---------------------------
+case class MonoItem(index: Int) extends ColorPalettedItem
+
+object MonoItem {
+  implicit val codec: Codec[MonoItem] = uint(1).as[MonoItem]
+  implicit val discriminator: Discriminator[UnCompressedItem, FourBitsItem, Int] = Discriminator(1)
+}
 
 //4-bits item
-case class FourBitsItem(index: Int) extends UnCompressedItem
+case class FourBitsItem(index: Int) extends ColorPalettedItem
 
 object FourBitsItem {
   implicit val codec: Codec[FourBitsItem] = uint4.as[FourBitsItem]
   implicit val discriminator: Discriminator[UnCompressedItem, FourBitsItem, Int] = Discriminator(4)
 }
 
-case class MonoItem(index:Int) extends UnCompressedItem
+//8-bits item
+case class EightBitsItem(index: Int) extends ColorPalettedItem
 
-object MonoItem {
-  implicit val codec: Codec[MonoItem] = uint(1).as[MonoItem]
-  implicit val discriminator: Discriminator[BMPDataItem, Uncoded, Int] = Discriminator(1)
+object EightBitsItem {
+  implicit val codec: Codec[EightBitsItem] = uint8.as[EightBitsItem]
+  implicit val discriminator: Discriminator[UnCompressedItem, EightBitsItem, Int] = Discriminator(8)
 }
+// subclasses for ColoredItem-----------------------------------
 
+// the 16-bit bmp data must be compessed by Compression.MASK
+//case class SixteenBitsColoredItem(bits:BitVector) extends ColoredItem
 
-//24-bits
-case class TwentyBitsItem(red: Int, green: Int, blue: Int) extends UnCompressedItem
+/*object SixteenBitsColoredItem {
 
-object TwentyBitsItem {
-  implicit val codec: Codec[TwentyBitsItem] = {
-    ("red" | uint8) ::
-      ("green" | uint8) ::
-      ("blue" | uint8)
-  }.as[TwentyBitsItem]
+}*/
+
+case class TwentiesBitsColoredItem(blue:Int,green: Int,red: Int) extends ColoredItem {
+  override val toString: String = s"TwentiesBitsColoredItem(red:%d,green:%d,blue:%d)".format(red,green,blue)
+}
+  /*case class TwentiesBitsColoredItem(red:Int,green: Int,blue: Int) extends ColoredItem {
+    override val toString: String = s"TwentiesBitsColoredItem(red:%d,green:%d,blue:%d)".format(red,green,blue)
+  }*/
+
+object TwentiesBitsColoredItem {
+  implicit val codec: Codec[TwentiesBitsColoredItem] = {
+      ("blue" | uint8) ::
+        ("green" | uint8) ::
+        ("red" | uint8)
+  }.as[TwentiesBitsColoredItem]
   implicit val discriminator: Discriminator[UnCompressedItem, EightBitsItem, Int] = Discriminator(24)
 }
 
-sealed trait UnCompressedItem extends BMPDataItem
+case class ThirtiesBitsColoredItem(red:Int,green:Int,blue:Int,alpha:Int) extends ColoredItem{
+  override def toString: String = s"ThirtiesBitsColoredItem(red:%d,green:%d,blue:%d,alpha:%d)".format(red,green,blue,alpha)
+}
 
-object UnCompressedItem {
-  implicit val discriminator: Discriminator[BMPDataItem, UnCompressedItem, Int] = Discriminator(0)
-  //  def codec(bits:Int): Codec[UnCompressedItem] = Codec.coproduct[UnCompressedItem].discriminatedBy(provide(uint2)).auto
-  //  val codec: Codec[UnCompressedItem] = Codec.coproduct[UnCompressedItem].discriminatedBy(uint2)
-  implicit val codec: Codec[UnCompressedItem] = discriminated[UnCompressedItem]
-    .by(uint16)
-    .typecase(1, MonoItem.codec)
-    .typecase(4, FourBitsItem.codec)
-    .typecase(8, EightBitsItem.codec)
-    .typecase(24, TwentyBitsItem.codec)
+object ThirtiesBitsColoredItem {
+  implicit val codec: Codec[ThirtiesBitsColoredItem] = {
+    ("red"  | uint8)::
+      ("green"  | uint8)::
+      ("blue"  | uint8)::
+      ("alpha"  | uint8)
+  }.as[ThirtiesBitsColoredItem]
+  implicit val discriminator: Discriminator[UnCompressedItem, EightBitsItem, Int] = Discriminator(32)
 }
 
 
