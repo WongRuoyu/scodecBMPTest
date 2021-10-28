@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="4" />
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91809904-24fd-4963-bd1c-58435e30b109" name="Changes" comment="initial commit">
+    <list default="true" id="91809904-24fd-4963-bd1c-58435e30b109" name="Changes" comment="code inspection done.">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2021_10_28_10_12__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2021_10_28_上午10_12_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2021_10_28_上午10_12_[Changes]1/shelved.patch" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BMPDataItem.sc" beforeDir="false" afterPath="$PROJECT_DIR$/src/BMPDataItem.sc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BMPFile.sc" beforeDir="false" afterPath="$PROJECT_DIR$/src/BMPFile.sc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RLECode.sc" beforeDir="false" afterPath="$PROJECT_DIR$/src/RLECode.sc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compression.sc" beforeDir="false" afterPath="$PROJECT_DIR$/src/compression.sc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/conditional.sc" beforeDir="false" afterPath="$PROJECT_DIR$/src/conditional.sc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/code/lib/DependencyFactory.scala" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/code/model/BMP/BMPDataItem.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/code/model/BMP/BMPDataItem.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/code/model/BMP/BMPFile.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/code/model/BMP/BMPFile.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/code/model/BMP/BMPFileHeader.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/code/model/BMP/BMPFileHeader.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/code/model/BMP/BMPInfoHeader.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/code/model/BMP/BMPInfoHeader.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/code/model/BMP/BitCount.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/code/model/BMP/BitCount.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/code/model/BMP/Compression.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/code/model/BMP/Compression.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/scala/code/bmp/BmpTest.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/code/bmp/BmpTest.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +78,9 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedIndex" value="2" />
+  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>
@@ -80,6 +96,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
@@ -120,6 +137,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial commit" />
+    <MESSAGE value="code inspection done." />
+    <option name="LAST_COMMIT_MESSAGE" value="code inspection done." />
   </component>
 </project>

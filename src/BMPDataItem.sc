@@ -16,4 +16,4 @@ val dataItem_coded = codec.encode(dataItem).require
 println(dataItem_coded.toHex)
 
 val dataItem_decoded = codec.decode(dataItem_coded).require.value
-dataItem_decoded.foreach(println _)
+dataItem_decoded.foreach(println)

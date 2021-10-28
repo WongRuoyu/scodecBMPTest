@@ -34,7 +34,7 @@ val bits = hex"0304050600034556670002780002050102780000091E0001".bits
 
 val listCodec = list(RLECode.codec)
 val decoded = listCodec.decode(bits).require.value
-decoded.foreach(println _)
+decoded.foreach(println)
 
 val data = List(Encoded(3,4),Encoded(5,6),
   Uncoded(List(69,86,103)),Encoded(2,120),

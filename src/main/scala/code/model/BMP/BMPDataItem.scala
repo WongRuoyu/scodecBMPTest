@@ -3,6 +3,7 @@ package code.model.BMP
 import scodec.bits.{BitVector, HexStringSyntax}
 import scodec.codecs.{Discriminator, ascii, bits, constant, discriminated, list, listOfN, peek, uint4, uint8, _}
 import scodec.{Attempt, Codec, DecodeResult, SizeBound, Transformer}
+import shapeless.HNil
 
 
 sealed trait CompressedItem extends BMPDataItem
@@ -51,7 +52,7 @@ object RLECode {
 
   implicit val discriminator: Discriminator[CompressedItem, RLECode, Int] = Discriminator(0)
 
-  val componentCodec = peek(uint8 :: uint8)
+  val componentCodec: Codec[Int :: Int :: HNil] = peek(uint8 :: uint8)
   implicit val codec: Codec[RLECode] = new Codec[RLECode] {
     override def sizeBound: SizeBound = SizeBound.atLeast(16)
 

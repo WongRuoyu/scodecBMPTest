@@ -11,14 +11,14 @@ class BmpTest extends Specification {
     val encoded = codec.encode(fileHeader).require
     val decoded = codec.decode(encoded).require
     "be able to encode BMPFileHeader correctly" >> {
-      encoded.length mustNotEqual (0)
+      encoded.length mustNotEqual 0
     }
     "be able to decode BMPFileHeader correctly" >> {
-      decoded.value mustEqual (fileHeader)
+      decoded.value mustEqual fileHeader
     }
     "be able to decode raw bits correctly" >> {
       val bits = BitVector.fromHex("424d760500000000000036040000")
-      val decoded2 = bits.map(codec.decode _)
+      val decoded2 = bits.map(codec.decode)
       println(decoded2.get.require.value)
       decoded2.isEmpty.mustEqual(false)
     }
@@ -36,7 +36,7 @@ class BmpTest extends Specification {
     }
     "be able to decode raw bitVector correctly" >> {
       val bits = BitVector.fromHex("28000000110000001000000001000800000000004001000000000000000000000000000000000000")
-      val decoded2 = bits.map(codec.decode(_))
+      val decoded2 = bits.map(codec.decode)
       val infoHeader = BMPInfoHeader(40, 17, 16, 1, BitCount._256Color, Compression.NoCompression, 320, 0, 0, 0, 0)
       decoded2.get.require.value.must_===(infoHeader)
     }
@@ -124,7 +124,6 @@ class BmpTest extends Specification {
       "the codec should" >> {
         val skipped = Skipped(5, 1)
         val codec = Skipped.codec
-        val encoded = codec.encode(skipped).require
         val expected = hex"00020501".bits
         "encode the entity correctly" >> {
           codec.encode(skipped).require.must_===(expected)

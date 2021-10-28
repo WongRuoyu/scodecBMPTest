@@ -6,7 +6,7 @@ import java.io.{File, FileInputStream}
 
 (9218000-2)%(48*4)
 val bc = BitCount._16TrueColor
-print(s"the toString() method is:%s".format(bc.toString()))
+print(s"the toString() method is:%s".format(bc.toString))
 
 val colorTable = ColorPalette(10,20,30)
 println(colorTable.toString)
@@ -43,11 +43,11 @@ val colorPalette = decoded.value.colorPalette
 //colorPalette.foreach(_.foreach(println _))
 
 val bitFieldMask = decoded.value.bitFieldMask
-bitFieldMask.foreach(println _)
+bitFieldMask.foreach(println)
 
 val data:List[BMPDataItem] = decoded.value.data
 val p1=data(1)
 //print(p1.)
 println(s"the length of data is:%d".format(data.length))
-data.grouped(infoHeader.biWidth.toInt).map(_.mkString("-")).foreach(println _)
+data.grouped(infoHeader.biWidth.toInt).map(_.mkString("-")).foreach(println)
 //data.foreach(println _)

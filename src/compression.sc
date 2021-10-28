@@ -10,7 +10,7 @@ object Compression extends Enumeration {
 
   def L2I(x:Long) : Attempt[Int] = uint32.encode(x).map(bv=>uint16.decode(bv.takeRight(16)).require.value)
   def I2L(x:Int):Long = x.toLong
-  implicit val codec: Codec[Compression] = enumerated(uint32.narrow(L2I _,I2L _ ),Compression)
+  implicit val codec: Codec[Compression] = enumerated(uint32.narrow(L2I,I2L),Compression)
 }
 
 val codec = Compression.codec

@@ -10,7 +10,7 @@ case class BMPFile(header: BMPFileHeader,
                    colorPalette: Option[List[ColorPalette]],
                    bitFieldMask: Option[BitFieldMask],
                    data: List[BMPDataItem]) {
-  def hasColorTable: Boolean = this.infoHeader.biBitCount == 1 || this.infoHeader.biBitCount == 4 || this.infoHeader.biBitCount == 8
+  def hasColorTable: Boolean = this.infoHeader.biBitCount == BitCount._1Color || this.infoHeader.biBitCount == BitCount._16Color || this.infoHeader.biBitCount == BitCount._256Color
 
   //  override def toString: String = this.header.toString ++ "\\n" ++ this.infoHeader.toString ++ "\\n" ++ this.colorPalette.map(_.flatMap(_.toString)).toString ++ "\\n"
 }
@@ -54,13 +54,13 @@ object BMPFile {
       val headingCodec = (headerCodec ~ infoHeaderCodec).flatZip {
         case (_, infoHeader: BMPInfoHeader) => conditional(infoHeader.hasColorTable, limitedSizeBytes(infoHeader.numColorPalette * numBytesPerColorPalette, list(ColorPalette.codec)))
       }.flatZip {
-        case ((_, infoHeader), _) => { conditional(infoHeader.hasMask, bitFieldMaskCodec)}
+        case ((_, infoHeader), _) =>  conditional(infoHeader.hasMask, bitFieldMaskCodec)
       }.flattenLeftPairs.as[Headers]
 
       val headers: Headers = headingCodec.decode(bits).require.value
 
       val res: List[BMPDataItem] = headingCodec.decode(bits).map {
-        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._1Color && infoHeader.biCompression == Compression.NoCompression => {println(infoHeader);list(MonoItem.codec).decode(remainder)}
+        case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._1Color && infoHeader.biCompression == Compression.NoCompression => list(MonoItem.codec).decode(remainder)
         case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._16Color && infoHeader.biCompression == Compression.NoCompression => list(RGBCode16.codec).decode(remainder)
         case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._16Color && infoHeader.biCompression == Compression.RLE8 => list(RLECode.codec).decode(remainder)
         case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._256Color && infoHeader.biCompression == Compression.NoCompression => list(EightBitsItem.codec).decode(remainder)
@@ -69,8 +69,8 @@ object BMPFile {
         case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._16TrueColor => list(RGBCode16.codec).decode(remainder)
         // 24-bit data is always stored as (R,G,B)
         case DecodeResult(Headers(_, infoHeader, _, _), remainder) if infoHeader.biBitCount == BitCount._24TrueColor => list(TwentiesBitsColoredItem.codec).decode(remainder)
-        case DecodeResult(Headers(_, infoHeader, colorPalette, bitFieldMask), remainder) if infoHeader.biBitCount == BitCount._32TrueColor && infoHeader.biCompression == Compression.NoCompression => {println(infoHeader);println(colorPalette);println(bitFieldMask);list(ThirtiesBitsColoredItem.codec).decode(remainder)}
-        case DecodeResult(Headers(_, infoHeader, colorPalette, bitFieldMask), remainder) if infoHeader.biBitCount == BitCount._32TrueColor && infoHeader.biCompression == Compression.MASK => {println(infoHeader);println(colorPalette);println(bitFieldMask);list(RGBCode32.codec).decode(remainder)}
+        case DecodeResult(Headers(_, infoHeader, colorPalette, bitFieldMask), remainder) if infoHeader.biBitCount == BitCount._32TrueColor && infoHeader.biCompression == Compression.NoCompression => list(ThirtiesBitsColoredItem.codec).decode(remainder)
+        case DecodeResult(Headers(_, infoHeader, colorPalette, bitFieldMask), remainder) if infoHeader.biBitCount == BitCount._32TrueColor && infoHeader.biCompression == Compression.MASK => list(RGBCode32.codec).decode(remainder)
       }.require.require.value
 
       val file = BMPFile(headers.header,headers.infoHeader,headers.colorPalette,headers.bitFieldMask,res)
